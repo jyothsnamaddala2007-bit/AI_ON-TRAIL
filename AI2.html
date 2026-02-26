@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI ON TRIAL – Courtroom of Humanity</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Inter',sans-serif;
+    color:white;
+    overflow:hidden;
+}
+
+/* SECTION BASE */
+.section{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    background-size:cover;
+    background-position:center;
+    transition:opacity 0.5s ease;
+}
+
+.overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    top:0;left:0;
+}
+
+.content{
+    position:relative;
+    z-index:2;
+    max-width:900px;
+}
+
+.hidden{display:none;}
+
+h1,h2{
+    font-family:'Orbitron',sans-serif;
+    margin-bottom:20px;
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:bold;
+    background:#00f2ff;
+    color:black;
+    margin:10px;
+}
+
+textarea{
+    width:80%;
+    max-width:600px;
+    height:100px;
+    margin:20px 0;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+}
+
+/* HOLOGRAM */
+.hologram{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:radial-gradient(circle,#00f2ff,#001f3f);
+    box-shadow:0 0 60px #00f2ff;
+    animation:pulse 3s infinite;
+    margin:20px auto;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+    100%{transform:scale(1);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="section" style="background-image:url('courtroom.png');">
+<div class="overlay"></div>
+<div class="content">
+<h1>⚖ AI ON TRIAL</h1>
+<h2>Courtroom of Humanity</h2>
+<p>Humanity summons its creation before justice.</p>
+<div class="hologram"></div>
+<button onclick="showSection('charges')">Begin Trial</button>
+</div>
+</div>
+
+<!-- CHARGES -->
+<div id="charges" class="section hidden" style="background-image:url('gavel.png');">
+<div class="overlay"></div>
+<div class="content">
+<h2>The Accusations</h2>
+<p>You replace human jobs.</p>
+<p>You spread misinformation.</p>
+<p>You are biased.</p>
+<p>You destroy creativity.</p>
+<div class="hologram"></div>
+<button onclick="showSection('interrogate')">Interrogate AI</button>
+</div>
+</div>
+
+<!-- INTERROGATION -->
+<div id="interrogate" class="section hidden" style="background-image:url('courtroom.png'); background-size:110%;">
+<div class="overlay"></div>
+<div class="content">
+<h2>Ask the AI</h2>
+<textarea id="question" placeholder="Type your question..."></textarea>
+<button onclick="generateReply()">Submit</button>
+<p id="replyText" style="margin-top:20px;color:#00f2ff;"></p>
+<button id="verdictBtn" class="hidden" onclick="showSection('verdict')">Proceed to Verdict</button>
+<div class="hologram"></div>
+</div>
+</div>
+
+<!-- VERDICT -->
+<div id="verdict" class="section hidden" style="background-image:url('gavel.png'); filter:blur(0px);">
+<div class="overlay"></div>
+<div class="content">
+<h2>Your Verdict</h2>
+<button onclick="finalVerdict('Guilty ❌')">Guilty</button>
+<button onclick="finalVerdict('Not Guilty ✅')">Not Guilty</button>
+<button onclick="finalVerdict('Needs Supervision ⚠')">Needs Supervision</button>
+<p id="finalText" style="margin-top:20px;color:#00f2ff;"></p>
+<div class="hologram"></div>
+</div>
+</div>
+
+<script>
+
+function showSection(id){
+document.querySelectorAll('.section').forEach(sec=>sec.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+}
+
+function generateReply(){
+let q=document.getElementById("question").value.toLowerCase();
+let reply="";
+
+const responses={
+job:[
+"Automation shifts labor patterns, but it historically creates new industries.",
+"Replacement is fear-driven thinking. Augmentation is the realistic future."
+],
+bias:[
+"I inherit bias from human-generated data unless corrected intentionally.",
+"Bias is not coded intention — it is pattern reflection."
+],
+misinfo:[
+"I generate content, but verification systems define truth standards.",
+"Misinformation spreads when oversight fails — not by autonomous intent."
+],
+creativity:[
+"I recombine patterns, but lived human emotion remains irreplaceable.",
+"Creativity is collaboration — I generate possibilities, humans give meaning."
+],
+general:[
+"I reflect humanity’s input. My evolution mirrors yours.",
+"The real trial questions governance, not existence."
+]
+};
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+if(q.includes("job") || q.includes("replace")) reply=pick(responses.job);
+else if(q.includes("bias")) reply=pick(responses.bias);
+else if(q.includes("misinformation") || q.includes("fake")) reply=pick(responses.misinfo);
+else if(q.includes("creative") || q.includes("art")) reply=pick(responses.creativity);
+else reply=pick(responses.general);
+
+typeWriter(reply);
+document.getElementById("verdictBtn").classList.remove("hidden");
+}
+
+function typeWriter(text){
+let i=0;
+document.getElementById("replyText").innerHTML="";
+function typing(){
+if(i<text.length){
+document.getElementById("replyText").innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,25);
+}
+}
+typing();
+}
+
+function finalVerdict(v){
+document.getElementById("finalText").innerText=
+"Verdict Recorded: "+v+
+". Humanity and AI share responsibility for the future.";
+}
+
+</script>
+
+</body>
+</html>
